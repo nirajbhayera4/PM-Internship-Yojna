@@ -1,36 +1,21 @@
-const internships = [
-  {
-    title: "AI Research Intern",
-    company: "OpenAI",
-    location: "Remote",
-    skills: ["Python", "Machine Learning", "Deep Learning"],
-    interests: ["AI", "Research"],
-    link: "https://openai.com/careers"
-  },
-  {
-    title: "Web Development Intern",
-    company: "Google",
-    location: "Bangalore, India",
-    skills: ["JavaScript", "React", "Node.js"],
-    interests: ["Web Development", "Frontend"],
-    link: "https://careers.google.com"
-  },
-  {
-    title: "Data Science Intern",
-    company: "Microsoft",
-    location: "Hyderabad, India",
-    skills: ["Python", "Pandas", "Data Analysis"],
-    interests: ["Data Science", "Analytics"],
-    link: "https://careers.microsoft.com"
-  },
-  {
-    title: "Cloud Computing Intern",
-    company: "Amazon AWS",
-    location: "Remote",
-    skills: ["AWS", "DevOps", "Linux"],
-    interests: ["Cloud", "Infrastructure"],
-    link: "https://aws.amazon.com/careers"
-  }
-];
+import { useState, useEffect } from 'react';
 
-export default internships;
+function useInternships() {
+  const [internships, setInternships] = useState([]);
+
+  useEffect(() => {
+    const fetchInternships = async () => {
+      try {
+        const response = await fetch('https://api.internshala.com/internships');
+        const data = await response.json();
+        setInternships(data);
+      } catch (error) {
+        console.error('Error fetching internships:', error);
+      }
+    };
+
+    fetchInternships();
+  }, []);
+
+  return internships;
+}

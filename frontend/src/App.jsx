@@ -5,13 +5,13 @@ import RecommendationList from "./components/RecommendationList";
 export default function App() {
   const [recommendations, setRecommendations] = useState([]);
 
-  const handleRecommendations = (data) => {
-    setRecommendations(data);
+  // For now, just use static data when form is submitted
+  const handleRecommendations = () => {
+    setRecommendations(mockInternships);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-100 via-pink-100 to-yellow-100 p-8">
-
       {/* Header */}
       <header className="mb-12 text-center">
         <img
@@ -67,3 +67,4 @@ export default function App() {
     </div>
   );
 }
+

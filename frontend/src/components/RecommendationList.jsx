@@ -11,10 +11,10 @@ export default function RecommendationList({ recommendations }) {
           className="border p-4 rounded-lg shadow-sm hover:shadow-md transition"
         >
           <h3 className="text-lg font-semibold">{rec.title}</h3>
-          <p className="text-gray-600">{rec.company}</p>
+          <p className="text-gray-600">{rec.company_name}</p>
           <p className="text-sm text-gray-500">{rec.location}</p>
           <a
-            href={rec.link}
+            href={rec.url}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline text-sm"
