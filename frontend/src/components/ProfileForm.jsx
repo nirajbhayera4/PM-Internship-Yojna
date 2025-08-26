@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { mockInternships } from "./mockdata";
 
 export default function ProfileForm({ onRecommendations }) {
   const [formData, setFormData] = useState({
@@ -13,34 +14,34 @@ export default function ProfileForm({ onRecommendations }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      // For now, you can fetch from your API or local JSON
-      const res = await fetch("https://workforindia.niti.gov.in/intern/api/internships");
-      const data = await res.json();
+    // Simple scoring: match sector, location, skills
+    const profileSkills = formData.skills.toLowerCase().split(",").map(s => s.trim());
 
-      // Simple scoring: match sector, location, skills
-      const profileSkills = formData.skills.toLowerCase().split(",").map(s => s.trim());
-      const recommendations = data
-        .map(job => {
-          let score = 0;
-          if (job.sector === formData.sector) score += 2;
-          if (job.location.toLowerCase() === formData.location.toLowerCase()) score += 2;
-          const matchedSkills = (job.skills_required || []).filter(sk =>
-            profileSkills.includes(sk.toLowerCase())
-          );
-          score += matchedSkills.length;
-          return { ...job, score };
-        })
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5);
+    const recommendations = mockInternships
+      .map(job => {
+        let score = 0;
 
-      onRecommendations(recommendations);
-    } catch (error) {
-      console.error("Error fetching recommendations:", error);
-    }
+        // Match sector (if available)
+        if (job.sector && job.sector.toLowerCase() === formData.sector.toLowerCase()) score += 2;
+
+        // Match location
+        if (job.location.toLowerCase().includes(formData.location.toLowerCase())) score += 2;
+
+        // Match skills (if job.skills exists)
+        const matchedSkills = (job.skills_required || []).filter(sk =>
+          profileSkills.includes(sk.toLowerCase())
+        );
+        score += matchedSkills.length;
+
+        return { ...job, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5); // Top 5 recommendations
+
+    onRecommendations(recommendations);
   };
 
   return (
